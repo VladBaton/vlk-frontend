@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class BaseRestConnection {
@@ -51,7 +52,7 @@ public class BaseRestConnection {
 
         // Записываем данные в тело запроса
         try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-            wr.writeBytes(payload);
+            wr.write(payload.getBytes(StandardCharsets.UTF_8)); // Гарантирует корректную передачу JSON
             wr.flush();
         }
         return connection;
