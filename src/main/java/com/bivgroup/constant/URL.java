@@ -11,4 +11,6 @@ public class URL {
     public static final String GET_NOTIFICATIONS_BY_CONTRACT_NUMBER = "http://localhost:8085/vlk/notifications/getByContractNumber";
 
     public static final String GET_NOTIFICATIONS_BY_INSURER_ID = "http://localhost:8085/vlk/notifications/getByClient";
+
+    public static final String DELETE_USER_ACCOUNT = "http://localhost:8085/account/delete";
 }

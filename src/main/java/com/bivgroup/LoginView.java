@@ -11,6 +11,7 @@ import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
@@ -34,7 +35,8 @@ public class LoginView extends VerticalLayout {
 
         // Поля ввода
         TextField loginField = new TextField("Логин");
-        TextField passwordField = new TextField("Пароль");
+        PasswordField passwordField = new PasswordField("Пароль");
+        passwordField.setRequired(true);
 
         // Кнопки
         Button loginButton = new Button("Вход", event -> {
@@ -52,6 +54,7 @@ public class LoginView extends VerticalLayout {
             if (Objects.nonNull(response) && SUCCESS_STATUS_CODE.equals(response.getStatusCode())) {
                 Notification.show("Вы успешно вошли", 2000, Notification.Position.MIDDLE);
                 SessionUtils.saveAttribute("authToken", response.getToken());
+                SessionUtils.saveAttribute("userLogin", loginField.getValue());
                 SessionUtils.saveAttribute("insurerId", String.valueOf(response.getInsurerId()));
 
                 // Перенаправление на страницу данных

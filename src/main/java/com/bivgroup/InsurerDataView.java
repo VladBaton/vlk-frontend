@@ -26,8 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
-import static com.bivgroup.constant.Constants.FOOTER_TEXT;
-import static com.bivgroup.constant.Constants.SUCCESS_STATUS_CODE;
+import static com.bivgroup.constant.Constants.*;
 import static com.bivgroup.constant.URL.GET_USER_DATA_URL;
 
 @Route("insurerData")
@@ -83,15 +82,21 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
             add(title);
 
             Button exitButton = new Button("Выйти", event -> {
-                SessionUtils.clearAttribute("authToken");
-                SessionUtils.clearAttribute("insurerId");
+                SESSION_ATTRIBUTES.forEach(SessionUtils::clearAttribute);
                 getUI().ifPresent(ui -> ui.navigate(""));
             });
+
             Button toNotificationsButton = new Button
                     ("Уведомления Страхователя", event -> {
                         getUI().ifPresent(ui -> ui.navigate("insurerNotifications"));
                     });
-            add(new HorizontalLayout(exitButton, toNotificationsButton));
+
+            // Кнопка сброса пароля
+            Button deletePasswordButton = new Button("Удалить учётную запись", event -> {
+                getUI().ifPresent(ui -> ui.navigate("resetPassword"));
+            });
+
+            add(new HorizontalLayout(exitButton, toNotificationsButton, deletePasswordButton));
 
             //Сами данные
             TextField nameField = new TextField("Имя");
