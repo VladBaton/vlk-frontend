@@ -59,6 +59,8 @@ public class LoginView extends VerticalLayout {
 
                 // Перенаправление на страницу данных
                 getUI().ifPresent(ui -> ui.navigate("insurerData"));
+            } else if (Objects.nonNull(response)){
+                Notification.show(response.getStatusDescription(), 2000, Notification.Position.MIDDLE);
             } else {
                 Notification.show("Неверный логин или пароль", 2000, Notification.Position.MIDDLE);
             }
