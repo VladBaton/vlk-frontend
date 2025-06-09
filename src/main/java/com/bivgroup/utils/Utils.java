@@ -3,6 +3,7 @@ package com.bivgroup.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,5 +28,9 @@ public class Utils {
     public static String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
+    }
+
+    public static String encodeUTF8(String data) {
+        return new String(data.getBytes(), StandardCharsets.UTF_8);
     }
 }

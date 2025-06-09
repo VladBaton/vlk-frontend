@@ -4,6 +4,7 @@ import com.bivgroup.pojo.request.AuthorizationRequest;
 import com.bivgroup.pojo.response.AuthorizationResponse;
 import com.bivgroup.rest.BaseRestConnection;
 import com.bivgroup.utils.SessionUtils;
+import com.bivgroup.utils.Utils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
@@ -49,10 +50,10 @@ public class LoginView extends VerticalLayout {
             try {
                 response = restConnection.post(request, AUTHORIZATION_URL, null, AuthorizationResponse.class);
             } catch (Exception ex) {
-                Notification.show("Ошибка при авторизации: " + ex);
+                Notification.show(Utils.encodeUTF8("Ошибка при авторизации: " + ex));
             }
             if (Objects.nonNull(response) && SUCCESS_STATUS_CODE.equals(response.getStatusCode())) {
-                Notification.show("Вы успешно вошли", 2000, Notification.Position.MIDDLE);
+                Notification.show("Вы успешно вошли в личный кабинет", 2000, Notification.Position.MIDDLE);
                 SessionUtils.saveAttribute("authToken", response.getToken());
                 SessionUtils.saveAttribute("userLogin", loginField.getValue());
                 SessionUtils.saveAttribute("insurerId", String.valueOf(response.getInsurerId()));
@@ -60,9 +61,9 @@ public class LoginView extends VerticalLayout {
                 // Перенаправление на страницу данных
                 getUI().ifPresent(ui -> ui.navigate("insurerData"));
             } else if (Objects.nonNull(response)){
-                Notification.show(response.getStatusDescription(), 2000, Notification.Position.MIDDLE);
+                Notification.show(Utils.encodeUTF8(response.getStatusDescription()), 2000, Notification.Position.MIDDLE);
             } else {
-                Notification.show("Неверный логин или пароль", 2000, Notification.Position.MIDDLE);
+                Notification.show(Utils.encodeUTF8("Неверный логин или пароль"), 2000, Notification.Position.MIDDLE);
             }
         });
 

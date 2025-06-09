@@ -8,7 +8,6 @@ import com.bivgroup.pojo.response.GetUserDataResponse;
 import com.bivgroup.rest.BaseRestConnection;
 import com.bivgroup.utils.SessionUtils;
 import com.bivgroup.utils.Utils;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
@@ -51,7 +50,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
         try {
             insurerId = Long.parseLong(SessionUtils.getAttribute("insurerId"));
         } catch (NumberFormatException ex) {
-            Notification.show("Ошибка при чтении insurerId");
+            Notification.show(Utils.encodeUTF8("Ошибка получения учётных данных! "));
             SessionUtils.clearAttribute("authToken");
             SessionUtils.clearAttribute("insurerId");
             getUI().ifPresent(ui -> ui.navigate(""));
@@ -71,7 +70,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
                     authToken,
                     GetUserDataResponse.class);
         } catch (Exception ex) {
-            Notification.show("Ошибка при получении данных пользователя: " + ex);
+            Notification.show(Utils.encodeUTF8("Ошибка при получении данных пользователя: " + ex));
             SessionUtils.clearAttribute("authToken");
             SessionUtils.clearAttribute("insurerId");
             getUI().ifPresent(ui -> ui.navigate(""));
@@ -100,29 +99,29 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
 
             //Сами данные
             TextField nameField = new TextField("Имя");
-            nameField.setValue(response.getInsurer().getInsurerName());
+            nameField.setValue(Utils.encodeUTF8(response.getInsurer().getInsurerName()));
             nameField.setReadOnly(true);
 
             TextField surnameField = new TextField("Фамилия");
-            surnameField.setValue(response.getInsurer().getInsurerSurname());
+            surnameField.setValue(Utils.encodeUTF8(response.getInsurer().getInsurerSurname()));
             surnameField.setReadOnly(true);
 
             TextField lastNameField = new TextField("Отчество");
-            lastNameField.setValue(response.getInsurer().getInsurerLastName());
+            lastNameField.setValue(Utils.encodeUTF8(response.getInsurer().getInsurerLastName()));
             lastNameField.setReadOnly(true);
 
             TextField emailField = new TextField("Email");
-            emailField.setValue(response.getInsurer().getInsurerEmail());
+            emailField.setValue(Utils.encodeUTF8(response.getInsurer().getInsurerEmail()));
             emailField.setReadOnly(true);
 
             TextField phoneField = new TextField("Телефон");
-            phoneField.setValue(response.getInsurer().getInsurerPhoneNumber());
+            phoneField.setValue(Utils.encodeUTF8(response.getInsurer().getInsurerPhoneNumber()));
             phoneField.setReadOnly(true);
 
             // Создание выпадающего списка для выбора контракта
             ComboBox<Contract> contractComboBox = new ComboBox<>("Выберите контракт");
             contractComboBox.setItems(response.getInsurer().getContracts());
-            contractComboBox.setItemLabelGenerator(Contract::getContractNumber);
+            contractComboBox.setItemLabelGenerator(contract -> Utils.encodeUTF8(contract.getContractNumber()));
 
             // Создание компонентов для отображения информации о выбранном контракте
             TextField contractNumberField = new TextField("Номер контракта");
@@ -146,7 +145,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
             contractComboBox.addValueChangeListener(event -> {
                 Contract selectedContract = event.getValue();
                 if (selectedContract != null) {
-                    contractNumberField.setValue(selectedContract.getContractNumber());
+                    contractNumberField.setValue(Utils.encodeUTF8(selectedContract.getContractNumber()));
                     startDateField.setValue(Utils.formatDate(selectedContract.getStartDate()));
                     endDateField.setValue(Utils.formatDate(selectedContract.getEndDate()));
 
@@ -157,9 +156,9 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
                     contractExtRow.setAlignItems(Alignment.CENTER);
                     //Заполнение доп инфы о контракте:
                     for (Map.Entry<String, HandbookValue> entry: selectedContract.getContractExt().entrySet()) {
-                        TextField textField = new TextField(entry.getValue().getDescription());
-                        textField.setValue(entry.getValue().getValue().toString());
-                        textField.setTitle(entry.getValue().getDescription());
+                        TextField textField = new TextField(Utils.encodeUTF8(entry.getValue().getDescription()));
+                        textField.setValue(Utils.encodeUTF8(entry.getValue().getValue().toString()));
+                        textField.setTitle(Utils.encodeUTF8(entry.getValue().getDescription()));
                         textField.setReadOnly(true);
                         textField.setWidthFull();
                         contractExtRow.add(textField);

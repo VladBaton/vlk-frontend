@@ -47,7 +47,7 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
         String authToken = SessionUtils.getAttribute("authToken");
         if (StringUtils.isEmpty(authToken)) {
             // Если токен отсутствует, перенаправляем на начальную страницу
-            Notification.show("Для просмотра данных пользователя необходима авторизация");
+            Notification.show(Utils.encodeUTF8("Для просмотра данных пользователя необходима авторизация"));
             event.forwardTo("");
         }
     }
@@ -58,7 +58,7 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
         try {
             insurerId = Long.parseLong(SessionUtils.getAttribute("insurerId"));
         } catch (NumberFormatException ex) {
-            Notification.show("Ошибка при чтении insurerId");
+            Notification.show(Utils.encodeUTF8("Ошибка при чтении insurerId"));
             SessionUtils.clearAttribute("authToken");
             SessionUtils.clearAttribute("insurerId");
             getUI().ifPresent(ui -> ui.navigate(""));
@@ -78,14 +78,14 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
                     authToken,
                     GetUserDataResponse.class);
         } catch (Exception ex) {
-            Notification.show("Ошибка при получении данных пользователя: " + ex);
+            Notification.show(Utils.encodeUTF8("Ошибка при получении данных пользователя: " + ex));
             SessionUtils.clearAttribute("authToken");
             SessionUtils.clearAttribute("insurerId");
             getUI().ifPresent(ui -> ui.navigate(""));
         }
 
         if (Objects.nonNull(getUserDataResponse) && SUCCESS_STATUS_CODE.equals(getUserDataResponse.getStatusCode())) {
-            H1 title = new H1("Данные страхователя");
+            H1 title = new H1("Уведомления   страхователя");
             add(title);
 
             Button exitButton = new Button("Выйти", event -> {
@@ -132,7 +132,7 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
             // Создание выпадающего списка для выбора контракта
             ComboBox<Contract> contractComboBox = new ComboBox<>("Выберите контракт");
             contractComboBox.setItems(getUserDataResponse.getInsurer().getContracts());
-            contractComboBox.setItemLabelGenerator(Contract::getContractNumber);
+            contractComboBox.setItemLabelGenerator(contract -> Utils.encodeUTF8(contract.getContractNumber()));
 
             // Создание компонентов для отображения информации о выбранном контракте
             TextField contractNumberField = new TextField("Номер контракта");
@@ -150,7 +150,7 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
             contractComboBox.addValueChangeListener(event -> {
                 Contract selectedContract = event.getValue();
                 if (selectedContract != null) {
-                    contractNumberField.setValue(selectedContract.getContractNumber());
+                    contractNumberField.setValue(Utils.encodeUTF8(selectedContract.getContractNumber()));
                     startDateField.setValue(Utils.formatDate(selectedContract.getStartDate()));
                     endDateField.setValue(Utils.formatDate(selectedContract.getEndDate()));
 
@@ -158,7 +158,7 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
                     if (Objects.isNull(selectedContract.getContractNumber()) || StringUtils.isEmpty(selectedContract.getContractNumber())) {
                         Notification.show("Поле пусто!");
                     }
-                    getNotificationsByContractNumberRequest.setContractNumber(selectedContract.getContractNumber());
+                    getNotificationsByContractNumberRequest.setContractNumber(Utils.encodeUTF8(selectedContract.getContractNumber()));
                     getNotificationsByContractNumberRequest.setRqId(String.valueOf(UUID.randomUUID()));
                     getNotificationsByContractNumberRequest.setRqTm(String.valueOf(new Date()));
 
@@ -174,10 +174,12 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
                                 authToken,
                                 NotificationResponse.class);
                     } catch (Exception ex) {
-                        Notification.show("Ошибка при получении уведомлений для контракта " + selectedContract.getContractNumber()
+                        Notification.show(Utils.encodeUTF8("Ошибка при получении уведомлений для контракта ") + selectedContract.getContractNumber()
                         + ": " + ex);
                     }
                     if (Objects.nonNull(notificationResponse)) {
+                        notificationResponse.getInsurerNotifications()
+                                .forEach(notification -> notification.setMessage(Utils.encodeUTF8(notification.getMessage())));
                         notificationsGrid.setItems(notificationResponse.getInsurerNotifications());
                     }
 
