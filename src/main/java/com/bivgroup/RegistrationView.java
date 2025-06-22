@@ -1,8 +1,12 @@
 package com.bivgroup;
 
 import com.bivgroup.pojo.request.CreateAccountRequest;
+import com.bivgroup.pojo.request.CreateVerificationCodeRequest;
+import com.bivgroup.pojo.response.BaseResponse;
 import com.bivgroup.pojo.response.CreateAccountResponse;
 import com.bivgroup.rest.BaseRestConnection;
+import com.bivgroup.utils.SessionUtils;
+import com.bivgroup.utils.Utils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
@@ -17,9 +21,9 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.bivgroup.constant.Constants.FOOTER_TEXT;
-import static com.bivgroup.constant.Constants.SUCCESS_STATUS_CODE;
+import static com.bivgroup.constant.Constants.*;
 import static com.bivgroup.constant.URL.CREATE_ACCOUNT_URL;
+import static com.bivgroup.constant.URL.CREATE_VERIFICATION_CODE_URL;
 
 @Route("registration")
 public class RegistrationView extends VerticalLayout {
@@ -38,25 +42,23 @@ public class RegistrationView extends VerticalLayout {
 
         // Кнопки
         Button loginButton = new Button("Регистрация", event -> {
-            CreateAccountRequest createAccountRequest = new CreateAccountRequest(dogNumber.getValue(),
-                    loginField.getValue(), passwordField.getValue(), String.valueOf(UUID.randomUUID()),
-                    String.valueOf(new Date()));
-
-            CreateAccountResponse response = null;
+            CreateVerificationCodeRequest request = new CreateVerificationCodeRequest();
+            request.setContractNumber(dogNumber.getValue());
+            BaseResponse response = new BaseResponse();
+            
             try {
-                response = restConnection.post(createAccountRequest,
-                        CREATE_ACCOUNT_URL,
-                        null,
-                        CreateAccountResponse.class);
+                response = restConnection.post(request, CREATE_VERIFICATION_CODE_URL, null, BaseResponse.class);
             } catch (Exception ex) {
-                Notification.show("Ошибка при регистрации: " + ex);
+                Notification.show("Ошибка при регистрации");
             }
 
-            if (Objects.nonNull(response) && SUCCESS_STATUS_CODE.equals(response.getStatusCode())) {
-                Notification.show("Аккаунт успешно создан", 2000, Notification.Position.MIDDLE);
-                getUI().ifPresent(ui -> ui.navigate("login"));
+            if (Objects.equals(response.getStatusCode(), 0L)) {
+                SessionUtils.saveAttribute(USER_LOGIN_ATTRIBUTE, loginField.getValue());
+                SessionUtils.saveAttribute(USER_PASSWORD_ATTRIBUTE, passwordField.getValue());
+                SessionUtils.saveAttribute(CONTRACT_NUMBER_ATTRIBUTE, dogNumber.getValue());
+                getUI().ifPresent(ui -> ui.navigate("verificationCode"));
             } else {
-                Notification.show("Ошибка при регистрации", 2000, Notification.Position.MIDDLE);
+                Notification.show("Ошибка при регистрации!" + Utils.encodeUTF8(response.getStatusDescription()));
             }
         });
 

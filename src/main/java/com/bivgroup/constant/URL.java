@@ -13,4 +13,8 @@ public class URL {
     public static final String GET_NOTIFICATIONS_BY_INSURER_ID = "http://localhost:8085/vlk/notifications/getByClient";
 
     public static final String DELETE_USER_ACCOUNT = "http://localhost:8085/account/delete";
+
+    public static final String CREATE_VERIFICATION_CODE_URL = "http://localhost:8085/account/createVerificationCode";
+
+    public static final String VALIDATE_VERIFICATION_CODE_URL = "http://localhost:8085/account/validateVerificationCode";
 }

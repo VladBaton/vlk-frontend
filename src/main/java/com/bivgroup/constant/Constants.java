@@ -15,10 +15,14 @@ public class Constants {
     public static String USER_LOGIN_ATTRIBUTE = "userLogin";
     public static String AUTH_TOKEN_ATTRIBUTE = "authToken";
     public static String INSURER_ID_ATTRIBUTE = "insurerId";
+    public static String USER_PASSWORD_ATTRIBUTE = "userPassword";
+    public static String CONTRACT_NUMBER_ATTRIBUTE = "contractNumber";
     public static Set<String> SESSION_ATTRIBUTES = Set.of(
             USER_LOGIN_ATTRIBUTE,
             AUTH_TOKEN_ATTRIBUTE,
-            INSURER_ID_ATTRIBUTE
+            INSURER_ID_ATTRIBUTE,
+            USER_PASSWORD_ATTRIBUTE,
+            CONTRACT_NUMBER_ATTRIBUTE
     );
 
     private Constants() {}
