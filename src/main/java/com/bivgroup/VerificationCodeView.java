@@ -7,7 +7,12 @@ import com.bivgroup.pojo.response.CreateAccountResponse;
 import com.bivgroup.rest.BaseRestConnection;
 import com.bivgroup.utils.SessionUtils;
 import com.bivgroup.utils.Utils;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Footer;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.notification.Notification;
@@ -28,6 +33,23 @@ public class VerificationCodeView extends VerticalLayout {
 
     public VerificationCodeView() {
 
+        this.setPadding(false); // Убираем внутренние отступы
+        this.setSpacing(false); // Убираем промежутки между элементами
+        this.getStyle().set("margin", "0"); // Убираем внешние отступы
+        setSizeFull(); // Занимает всю доступную высоту
+
+        // Логотип компании
+        Image logo = new Image("logo.png", "Логотип компании"); // Путь к изображению
+        logo.setHeight("61px"); // Установите нужную высоту
+
+        // Заголовок с логотипом
+        HorizontalLayout header = new HorizontalLayout();
+        header.setWidthFull();
+        header.add(logo);
+        header.setWidthFull(); // Устанавливаем ширину на 100%
+        header.setJustifyContentMode(JustifyContentMode.START); // Логотип слева
+
+
         String login = SessionUtils.getAttribute(USER_LOGIN_ATTRIBUTE);
         String password = SessionUtils.getAttribute(USER_PASSWORD_ATTRIBUTE);
         String dogNumber = SessionUtils.getAttribute(CONTRACT_NUMBER_ATTRIBUTE);
@@ -35,6 +57,11 @@ public class VerificationCodeView extends VerticalLayout {
         // Поле для ввода кода из СМС
         PasswordField smsCodeField = new PasswordField("Введите проверочный код");
         smsCodeField.setRequiredIndicatorVisible(true);
+
+        // Spacer для центрирования поля ввода
+        Div spacer = new Div();
+        spacer.setHeightFull(); // Занимает все доступное пространство
+        spacer.setWidthFull(); // Занимает все доступное пространство
 
         // Кнопка "Ввод"
         Button submitButton = new Button("Далее", event -> {
@@ -59,8 +86,27 @@ public class VerificationCodeView extends VerticalLayout {
             }
         });
 
-        // Добавляем компоненты на страницу
-        add(smsCodeField, submitButton);
+        VerticalLayout smsCodeLayout = new VerticalLayout();
+        smsCodeLayout.add(smsCodeField, submitButton);
+
+        // Размещаем кнопки и поле ввода
+        VerticalLayout centerLayout = new VerticalLayout(spacer, smsCodeField, submitButton, spacer);
+        centerLayout.setAlignItems(Alignment.CENTER); // Центрируем содержимое по горизонтали
+        centerLayout.setSpacing(true); // Добавляем промежутки между элементами
+
+        // Подвал
+        Footer footer = new Footer();
+        Div footerContent = new Div();
+        footerContent.setText(FOOTER_TEXT);
+        footer.add(footerContent);
+        footer.getStyle().set("text-align", "center");
+        footer.getStyle().set("position", "fixed");
+        footer.getStyle().set("bottom", "0");
+        footer.getStyle().set("left", "0");
+        footer.getStyle().set("width", "100%");
+        footer.setWidthFull();
+
+        add(header, centerLayout, spacer, footer);
     }
 
     private void createAccount(String dogNumber, String login, String password) {
