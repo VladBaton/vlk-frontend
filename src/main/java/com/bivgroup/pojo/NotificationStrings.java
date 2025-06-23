@@ -15,7 +15,21 @@ public class NotificationStrings {
         notificationId = notification.getNotificationId();
         contractId = notification.getContractId();
         insurerId = notification.getInsurerId();
-        eventCode = notification.getEventCode();
+
+        if (notification.getEventCode() == 1L) {
+            eventCode = "Создание договора";
+        } else if (notification.getEventCode() == 2L) {
+            eventCode = "Начало действия договора";
+        } else if (notification.getEventCode() == 3L) {
+            eventCode = "Окончание действия договора";
+        } else if (notification.getEventCode() == 4L) {
+            eventCode = "Расторжение договора";
+        } else if (notification.getEventCode() == 5L) {
+            eventCode = "Оплата очередного периода";
+        } else if (notification.getEventCode() == 6L) {
+            eventCode = "Напоминание о необходимости внесения страховой премии";
+        }
+
         message = notification.getMessage();
         createDate = simpleDateFormat.format(notification.getCreateDate());
     }
@@ -23,7 +37,7 @@ public class NotificationStrings {
     private Long notificationId;
     private Long contractId;
     private Long insurerId;
-    private Long eventCode;
+    private String eventCode;
     private String message;
     private String createDate;
 }

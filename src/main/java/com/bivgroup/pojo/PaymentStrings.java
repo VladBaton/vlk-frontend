@@ -19,7 +19,14 @@ public class PaymentStrings {
         this.startDate = simpleDateFormat.format(payment.getStartDate());
         this.finishDate = simpleDateFormat.format(payment.getFinishDate());
         this.orderNum = payment.getOrderNum();
-        this.status = payment.getStatus();
+
+        if (payment.getStatus() == 1L) {
+            status = "Успешно оплачен";
+        } else if (payment.getStatus() == 2L) {
+            status = "Ожидает оплаты";
+        } else {
+            status = "";
+        }
     }
 
     private Long paymentId;
@@ -28,5 +35,5 @@ public class PaymentStrings {
     private String startDate;
     private String finishDate;
     private Long orderNum;
-    private Long status;
+    private String status;
 }

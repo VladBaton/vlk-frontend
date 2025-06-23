@@ -164,10 +164,11 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
 
             // Создание таблицы для отображения уведомлений
             Grid<com.bivgroup.pojo.NotificationStrings> notificationsGrid = new Grid<>(com.bivgroup.pojo.NotificationStrings.class);
-            notificationsGrid.setColumns("notificationId", "message", "createDate");
+            notificationsGrid.setColumns("notificationId", "message", "eventCode", "createDate");
             notificationsGrid.getColumnByKey("notificationId").setVisible(false);
             notificationsGrid.getColumnByKey("message").setHeader("Текст уведомления");
             notificationsGrid.getColumnByKey("createDate").setHeader("Дата");
+            notificationsGrid.getColumnByKey("eventCode").setHeader("Тип напоминания");
 
             // Обработка выбора контракта
             contractComboBox.addValueChangeListener(event -> {
