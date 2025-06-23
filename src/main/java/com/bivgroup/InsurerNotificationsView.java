@@ -185,12 +185,6 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
                     getNotificationsByContractNumberRequest.setContractNumber(Utils.encodeUTF8(selectedContract.getContractNumber()));
                     getNotificationsByContractNumberRequest.setRqId(String.valueOf(UUID.randomUUID()));
                     getNotificationsByContractNumberRequest.setRqTm(String.valueOf(new Date()));
-
-                    try {
-                        Notification.show(new ObjectMapper().writeValueAsString(getNotificationsByContractNumberRequest));
-                    } catch (JsonProcessingException e) {
-
-                    }
                     NotificationResponse notificationResponse = null;
                     try {
                         notificationResponse = restConnection.post(getNotificationsByContractNumberRequest,
