@@ -9,6 +9,8 @@ import com.bivgroup.pojo.response.GetUserDataResponse;
 import com.bivgroup.rest.BaseRestConnection;
 import com.bivgroup.utils.SessionUtils;
 import com.bivgroup.utils.Utils;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
@@ -147,8 +149,14 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
 
             // Создание компонентов для отображения информации о выбранном контракте
             TextField contractNumberField = new TextField("Номер контракта");
+            contractNumberField.setEnabled(false);
             TextField startDateField = new TextField("Дата начала");
+            startDateField.setEnabled(false);
             TextField endDateField = new TextField("Дата окончания");
+            endDateField.setEnabled(false);
+            TextField productSysName = new TextField("Наименовение страхового продукта");
+            productSysName.setWidth("300px");
+            productSysName.setEnabled(false);
 
             // Создание таблицы для отображения платежей
             Grid<PaymentStrings> paymentGrid = new Grid<>(PaymentStrings.class);
@@ -170,6 +178,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
                     contractNumberField.setValue(Utils.encodeUTF8(selectedContract.getContractNumber()));
                     startDateField.setValue(Utils.formatDate(selectedContract.getStartDate()));
                     endDateField.setValue(Utils.formatDate(selectedContract.getEndDate()));
+                    productSysName.setValue(Utils.encodeUTF8(selectedContract.getContractSysName()));
 
                     contractExtInfo.removeAll(); // очистка доп инфы
                     int numberOfFieldOnRow = 0;
@@ -199,6 +208,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
                     contractNumberField.clear();
                     startDateField.clear();
                     endDateField.clear();
+                    productSysName.clear();
                     contractExtInfo.removeAll(); // очистка доп инфы
                     paymentGrid.setItems(List.of()); // Очистка таблицы
                 }
@@ -207,7 +217,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
 
             // Добавление всех компонентов на страницу
             add(new HorizontalLayout(nameField, surnameField, lastNameField, emailField, phoneField),
-                    new HorizontalLayout(contractComboBox, contractNumberField, startDateField, endDateField),
+                    new HorizontalLayout(contractComboBox, productSysName, startDateField, endDateField),
                     contractExtInfo,
                     paymentGrid);
 
@@ -227,7 +237,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
             footer.getStyle().set("bottom", "0");
             footer.getStyle().set("left", "0");
             footer.getStyle().set("width", "100%");
-            add(footer);
+            add(new Div(), footer);
 
             // Полное центрирование
             setAlignItems(Alignment.CENTER);

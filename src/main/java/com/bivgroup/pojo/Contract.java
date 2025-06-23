@@ -18,4 +18,5 @@ public class Contract {
     private Date signDate;
     private List<Payment> payments;
     private Map<String, HandbookValue> contractExt;
+    private String contractSysName;
 }
