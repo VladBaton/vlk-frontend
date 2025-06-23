@@ -10,7 +10,9 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -30,12 +32,33 @@ public class LoginView extends VerticalLayout {
     private final BaseRestConnection restConnection = new BaseRestConnection();
 
     public LoginView() {
+
+        // Логотип компании
+        Image logo = new Image("logo.png", "Логотип компании"); // Путь к изображению
+        logo.setHeight("61px"); // Установите нужную высоту
+
+        // Заголовок с логотипом
+        HorizontalLayout header = new HorizontalLayout();
+        header.setWidthFull();
+        header.add(logo);
+        header.setWidthFull(); // Устанавливаем ширину на 100%
+        header.setJustifyContentMode(JustifyContentMode.START); // Логотип слева
+
+        // Spacer для центрирования поля ввода
+        Div spacer = new Div();
+        spacer.setHeightFull(); // Занимает все доступное пространство
+        spacer.setWidthFull(); // Занимает все доступное пространство
+
+        add(header);
+
+
         // Заголовок
         H1 title = new H1("Авторизация");
-        add(title);
+        add(spacer, new Div(), new Div(), title);
 
         // Поля ввода
         TextField loginField = new TextField("Логин");
+        loginField.setRequired(true);
         PasswordField passwordField = new PasswordField("Пароль");
         passwordField.setRequired(true);
 
@@ -74,13 +97,19 @@ public class LoginView extends VerticalLayout {
         // Формат для полей ввода и кнопок
         FormLayout formLayout = new FormLayout();
         formLayout.add(loginField, passwordField, loginButton, backButton);
-        add(formLayout);
+        add(formLayout, spacer);
 
         // Подвал
         Footer footer = new Footer();
         Div footerContent = new Div();
         footerContent.setText(FOOTER_TEXT);
         footer.add(footerContent);
+        footer.getStyle().set("text-align", "center");
+        footer.getStyle().set("position", "fixed");
+        footer.getStyle().set("bottom", "0");
+        footer.getStyle().set("left", "0");
+        footer.getStyle().set("width", "100%");
+        footer.setWidthFull();
         add(footer);
 
         // Полное центрирование

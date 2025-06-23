@@ -12,8 +12,11 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
@@ -31,14 +34,37 @@ public class RegistrationView extends VerticalLayout {
     private final BaseRestConnection restConnection = new BaseRestConnection();
 
     public RegistrationView() {
+
+        // Логотип компании
+        Image logo = new Image("logo.png", "Логотип компании"); // Путь к изображению
+        logo.setHeight("61px"); // Установите нужную высоту
+
+        // Заголовок с логотипом
+        HorizontalLayout header = new HorizontalLayout();
+        header.setWidthFull();
+        header.add(logo);
+        header.setWidthFull(); // Устанавливаем ширину на 100%
+        header.setJustifyContentMode(JustifyContentMode.START); // Логотип слева
+
+        // Spacer для центрирования поля ввода
+        Div spacer = new Div();
+        spacer.setHeightFull(); // Занимает все доступное пространство
+        spacer.setWidthFull(); // Занимает все доступное пространство
+
+        add(header);
+
+
         // Заголовок
         H1 title = new H1("Создание ЛК");
-        add(title);
+        add(spacer, title);
 
         // Поля ввода
         TextField dogNumber = new TextField("Номер договора");
+        dogNumber.setRequired(true);
         TextField loginField = new TextField("Логин");
-        TextField passwordField = new TextField("Пароль");
+        loginField.setRequired(true);
+        PasswordField passwordField = new PasswordField("Пароль");
+        passwordField.setRequired(true);
 
         // Кнопки
         Button loginButton = new Button("Регистрация", event -> {
@@ -62,21 +88,24 @@ public class RegistrationView extends VerticalLayout {
             }
         });
 
-        Button backButton = new Button("Назад", event -> {
-            getUI().ifPresent(ui -> ui.navigate(""));
-        });
+        Button backButton = new Button("Назад", event -> getUI().ifPresent(ui -> ui.navigate("")));
 
         // Формат для полей ввода и кнопок
         FormLayout formLayout = new FormLayout();
-        formLayout.add(dogNumber, loginField, passwordField, loginButton, backButton);
-        add(formLayout);
+        formLayout.add(dogNumber, loginField, passwordField);
+        add(formLayout, new HorizontalLayout(loginButton, backButton));
 
         // Подвал
         Footer footer = new Footer();
         Div footerContent = new Div();
         footerContent.setText(FOOTER_TEXT);
         footer.add(footerContent);
-        add(footer);
+        footer.getStyle().set("text-align", "center");
+        footer.getStyle().set("position", "fixed");
+        footer.getStyle().set("bottom", "0");
+        footer.getStyle().set("left", "0");
+        footer.getStyle().set("width", "100%");
+        add(spacer, footer);
 
         // Полное центрирование
         setAlignItems(Alignment.CENTER);

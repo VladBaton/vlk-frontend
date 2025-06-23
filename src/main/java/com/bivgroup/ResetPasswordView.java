@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -32,6 +33,25 @@ public class ResetPasswordView extends VerticalLayout {
     private final BaseRestConnection restConnection = new BaseRestConnection();
 
     public ResetPasswordView() {
+
+        // Логотип компании
+        Image logo = new Image("logo.png", "Логотип компании"); // Путь к изображению
+        logo.setHeight("61px"); // Установите нужную высоту
+
+        // Заголовок с логотипом
+        HorizontalLayout header = new HorizontalLayout();
+        header.setWidthFull();
+        header.add(logo);
+        header.setWidthFull(); // Устанавливаем ширину на 100%
+        header.setJustifyContentMode(JustifyContentMode.START); // Логотип слева
+
+        // Spacer для центрирования поля ввода
+        Div spacer = new Div();
+        spacer.setHeightFull(); // Занимает все доступное пространство
+        spacer.setWidthFull(); // Занимает все доступное пространство
+
+        add(header, spacer);
+
 
         // Заголовок страницы
         add(new H1("Подтвердите удаление учётной записи"));
@@ -85,7 +105,12 @@ public class ResetPasswordView extends VerticalLayout {
         Div footerContent = new Div();
         footerContent.setText(FOOTER_TEXT);
         footer.add(footerContent);
-        add(footer);
+        footer.getStyle().set("text-align", "center");
+        footer.getStyle().set("position", "fixed");
+        footer.getStyle().set("bottom", "0");
+        footer.getStyle().set("left", "0");
+        footer.getStyle().set("width", "100%");
+        add(spacer, footer);
 
         // Полное центрирование
         setAlignItems(Alignment.CENTER);

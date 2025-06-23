@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class Utils {
 
@@ -31,6 +32,9 @@ public class Utils {
     }
 
     public static String encodeUTF8(String data) {
-        return new String(data.getBytes(), StandardCharsets.UTF_8);
+        if (Objects.nonNull(data)) {
+            return new String(data.getBytes(), StandardCharsets.UTF_8);
+        }
+        return "";
     }
 }
