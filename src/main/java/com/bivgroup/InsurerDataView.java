@@ -3,6 +3,7 @@ package com.bivgroup;
 import com.bivgroup.pojo.Contract;
 import com.bivgroup.pojo.HandbookValue;
 import com.bivgroup.pojo.Payment;
+import com.bivgroup.pojo.PaymentStrings;
 import com.bivgroup.pojo.request.GetUserDataRequest;
 import com.bivgroup.pojo.response.GetUserDataResponse;
 import com.bivgroup.rest.BaseRestConnection;
@@ -25,6 +26,7 @@ import com.vaadin.flow.router.Route;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.bivgroup.constant.Constants.*;
 import static com.bivgroup.constant.URL.GET_USER_DATA_URL;
@@ -149,7 +151,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
             TextField endDateField = new TextField("Дата окончания");
 
             // Создание таблицы для отображения платежей
-            Grid<Payment> paymentGrid = new Grid<>(Payment.class);
+            Grid<PaymentStrings> paymentGrid = new Grid<>(PaymentStrings.class);
             paymentGrid.setColumns("paymentId", "amount", "payDate", "orderNum", "status");
             paymentGrid.getColumnByKey("amount").setHeader("Сумма платежа");
             paymentGrid.getColumnByKey("payDate").setHeader("Срок оплаты");
@@ -192,7 +194,7 @@ public class InsurerDataView extends VerticalLayout implements BeforeEnterObserv
                     }
 
                     // Заполнение таблицы платежей
-                    paymentGrid.setItems(selectedContract.getPayments());
+                    paymentGrid.setItems(selectedContract.getPayments().stream().map(PaymentStrings::new).collect(Collectors.toList()));
                 } else {
                     contractNumberField.clear();
                     startDateField.clear();

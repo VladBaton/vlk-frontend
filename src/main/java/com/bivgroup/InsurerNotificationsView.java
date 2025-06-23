@@ -1,6 +1,7 @@
 package com.bivgroup;
 
 import com.bivgroup.pojo.Contract;
+import com.bivgroup.pojo.NotificationStrings;
 import com.bivgroup.pojo.Payment;
 import com.bivgroup.pojo.request.GetNotificationsByClientRequest;
 import com.bivgroup.pojo.request.GetNotificationsByContractNumberRequest;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.bivgroup.constant.Constants.FOOTER_TEXT;
 import static com.bivgroup.constant.Constants.SUCCESS_STATUS_CODE;
@@ -161,7 +163,7 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
             TextField endDateField = new TextField("Дата окончания");
 
             // Создание таблицы для отображения уведомлений
-            Grid<com.bivgroup.pojo.Notification> notificationsGrid = new Grid<>(com.bivgroup.pojo.Notification.class);
+            Grid<com.bivgroup.pojo.NotificationStrings> notificationsGrid = new Grid<>(com.bivgroup.pojo.NotificationStrings.class);
             notificationsGrid.setColumns("notificationId", "message", "createDate");
             notificationsGrid.getColumnByKey("notificationId").setVisible(false);
             notificationsGrid.getColumnByKey("message").setHeader("Текст уведомления");
@@ -201,7 +203,7 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
                     if (Objects.nonNull(notificationResponse)) {
                         notificationResponse.getInsurerNotifications()
                                 .forEach(notification -> notification.setMessage(Utils.encodeUTF8(notification.getMessage())));
-                        notificationsGrid.setItems(notificationResponse.getInsurerNotifications());
+                        notificationsGrid.setItems(notificationResponse.getInsurerNotifications().stream().map(NotificationStrings::new).collect(Collectors.toList()));
                     }
 
                 } else {
@@ -233,7 +235,7 @@ public class InsurerNotificationsView extends VerticalLayout implements BeforeEn
             footer.getStyle().set("bottom", "0");
             footer.getStyle().set("left", "0");
             footer.getStyle().set("width", "100%");
-            add(footer);
+            add(new Div(), footer);
 
             // Полное центрирование
             setAlignItems(Alignment.CENTER);
